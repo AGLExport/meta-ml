@@ -1,0 +1,67 @@
+From e69df569ff59677c9d03013599e4e26f0cffc664 Mon Sep 17 00:00:00 2001
+From: Pratham Deshmukh <p-deshmukh@ti.com>
+Date: Wed, 4 Mar 2026 16:02:44 +0530
+Subject: [PATCH 6/9] Remove TARGET dependency
+
+Upstream-Status: Pending
+
+Signed-off-by: Pratham Deshmukh <p-deshmukh@ti.com>
+---
+ CMakeLists.txt | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 04e56cfdd7..9249e054c3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -221,7 +221,7 @@ if(ACL_MULTI_ISA OR ACL_BUILD_SVE)
+       LINK_LIBRARIES "${ARM_COMPUTE_LINK_LIBS}"
+   )
+ else()
+-  add_library(arm_compute_sve OBJECT EXCLUDE_FROM_ALL)
++  add_library(arm_compute_sve INTERFACE)
+ endif()
+ 
+ if(ACL_MULTI_ISA OR ACL_BUILD_SVE)
+@@ -235,7 +235,7 @@ if(ACL_MULTI_ISA OR ACL_BUILD_SVE)
+       LINK_LIBRARIES "${ARM_COMPUTE_LINK_LIBS}"
+   )
+ else()
+-  add_library(arm_compute_sve_no_vectorize OBJECT EXCLUDE_FROM_ALL)
++  add_library(arm_compute_sve_no_vectorize INTERFACE)
+ endif()
+ 
+ if(ACL_MULTI_ISA OR ACL_BUILD_SVE2)
+@@ -249,7 +249,7 @@ if(ACL_MULTI_ISA OR ACL_BUILD_SVE2)
+       LINK_LIBRARIES "${ARM_COMPUTE_LINK_LIBS}"
+   )
+ else()
+-  add_library(arm_compute_sve2 OBJECT EXCLUDE_FROM_ALL)
++  add_library(arm_compute_sve2 INTERFACE)
+ endif()
+ 
+ add_library(arm_compute_core OBJECT ${ARM_COMPUTE_SOURCES})
+@@ -263,7 +263,7 @@ set_target_properties(
+ )
+ 
+ if(NOT (ACL_ARCH_ISA STREQUAL "armv7" OR ACL_ARCH_ISA STREQUAL "armv8-a"))
+-  add_library(arm_compute_core_fp16 OBJECT)
++  add_library(arm_compute_core_fp16 OBJECT )
+   set_target_properties(
+     arm_compute_core_fp16
+     PROPERTIES
+@@ -273,7 +273,10 @@ if(NOT (ACL_ARCH_ISA STREQUAL "armv7" OR ACL_ARCH_ISA STREQUAL "armv8-a"))
+       LINK_LIBRARIES "${ARM_COMPUTE_LINK_LIBS}"
+   )
+ else()
+-  add_library(arm_compute_core_fp16 INTERFACE)
++  # For armv7 and armv8-a: create library with sources if they exist
++  if(ARM_COMPUTE_CORE_FP16_SOURCES)
++    add_library(arm_compute_core_fp16 OBJECT ${ARM_COMPUTE_CORE_FP16_SOURCES})
++  endif()
+ endif()
+ 
+ add_library(arm_compute_graph ${ARM_COMPUTE_LIB_BUILD_TYPE} ${ARM_COMPUTE_GRAPH_SOURCES})
+-- 
+2.43.0
+
