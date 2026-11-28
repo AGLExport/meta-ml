@@ -13,13 +13,11 @@ PR = "r0"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=05fda7e0b3a0fe6749e8443316fc9a3f"
 
-S = "${WORKDIR}/git"
-FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 SRC_URI = "\
     git://github.com/uxlfoundation/oneDNN.git;protocol=https;branch=rls-v3.10 \
 "
 
-DEPENDS += " arm-computelibrary"
+DEPENDS += " arm-compute-library"
 
 inherit cmake
 
